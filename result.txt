@@ -1,0 +1,56 @@
+Gayeon@DESKTOP-MIANH73 ~
+$ ~/a.exe
+[INFO] 명령어 테이블 70개 로드 완료.
+[INFO] 입력 파일 45라인 파싱 완료.
+
+[OUTPUT RESULT]
+=====================================================
+LABEL    OP       OPERANDS               NOTE
+-----------------------------------------------------
+COPY     START    1000                   OPCODE: 01
+FIRST    STL      RETADR                 OPCODE: 14
+CLOOP    JSUB     RDREC                  OPCODE: 48
+         LDA      LENGTH                 OPCODE: 00
+         COMP     ZERO                   OPCODE: 28
+         JEQ      ENDFIL                 OPCODE: 30
+         JSUB     WRREC                  OPCODE: 48
+         J        CLOOP                  OPCODE: 3C
+ENDFIL   LDA      EOF                    OPCODE: 00
+         STA      BUFFER                 OPCODE: 0C
+         LDA      THREE                  OPCODE: 00
+         STA      LENGTH                 OPCODE: 0C
+         JSUB     WRREC                  OPCODE: 48
+         LDL      RETADR                 OPCODE: 08
+         RSUB                            OPCODE: 4C
+EOF      BYTE     C'EOF'                 OPCODE: 0B
+THREE    WORD     3                      OPCODE: 0D
+ZERO     WORD     0                      OPCODE: 0D
+RETADR   RESW     1                      OPCODE: 05
+LENGTH   RESW     1                      OPCODE: 05
+BUFFER   RESB     4096                   OPCODE: 06
+RDREC    LDX      ZERO                   OPCODE: 04
+         LDA      ZERO                   OPCODE: 00
+RLOOP    TD       INPUT                  OPCODE: E0
+         JEQ      RLOOP                  OPCODE: 30
+         RD       INPUT                  OPCODE: D8
+         COMP     ZERO                   OPCODE: 28
+         JEQ      EXIT                   OPCODE: 30
+         STCH     BUFFER,X               OPCODE: 54
+         TIX      MAXLEN                 OPCODE: 2C
+         JLT      RLOOP                  OPCODE: 38
+EXIT     STX      LENGTH                 OPCODE: 10
+         RSUB                            OPCODE: 4C
+INPUT    BYTE     X'F1'                  OPCODE: 0B
+MAXLEN   WORD     4096                   OPCODE: 0D
+WRREC    LDX      ZERO                   OPCODE: 04
+WLOOP    TD       OUTPUT                 OPCODE: E0
+         JEQ      WLOOP                  OPCODE: 30
+         LDCH     BUFFER,X               OPCODE: 50
+         WD       OUTPUT                 OPCODE: DC
+         TIX      LENGTH                 OPCODE: 2C
+         JLT      WLOOP                  OPCODE: 38
+         RSUB                            OPCODE: 4C
+OUTPUT   BYTE     X'05'                  OPCODE: 0B
+         END      FIRST                  OPCODE: 0E
+=====================================================
+
